@@ -6,13 +6,12 @@ import Sidebar from './components/Sidebar';
 import SiginPage from './pages/Auth/Signin';
 import SigUpPage from './pages/Auth/Signup';
 import Applicants from './pages/Applicants';
-
+  
 
 function App() {
 
   return (
     <>
-
       <div className="flex h-screen overflow-hidden bg-gray-50">
         <Sidebar />
 

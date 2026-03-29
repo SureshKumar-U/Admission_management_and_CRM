@@ -39,12 +39,18 @@ export const recentActivity = [
   { id: 6, dot: "#9f77dd", name: "Arjun Mehta", action: "moved to interview stage", time: "4 hr ago" },
 ];
 
-export const programmes = [
-  { name: "B.Tech CSE", count: 980, pct: 31, color: "#14b8a6" },
-  { name: "MBA", count: 720, pct: 23, color: "#378add" },
-  { name: "B.Tech ECE", count: 540, pct: 17, color: "#ef9f27" },
-  { name: "M.Sc Data Sci", count: 460, pct: 15, color: "#9f77dd" },
-  { name: "BBA", count: 280, pct: 9, color: "#639922" },
-  { name: "Others", count: 162, pct: 5, color: "#888780" },
-];
-
+  export const programs = [
+    { id: 1, deptId: 1, name: "B.E. Computer Science", code: "CSE", type: "UG", intake: 120, academicYear: "2025-26",
+      quotas: { KCET: { total: 60, filled: 42 }, COMEDK: { total: 30, filled: 18 }, Management: { total: 30, filled: 20 } } },
+    { id: 2, deptId: 2, name: "B.E. Electronics & Comm.", code: "ECE", type: "UG", intake: 60, academicYear: "2025-26",
+      quotas: { KCET: { total: 30, filled: 30 }, COMEDK: { total: 15, filled: 9 }, Management: { total: 15, filled: 5 } } },
+    { id: 3, deptId: 3, name: "B.E. Mechanical", code: "ME", type: "UG", intake: 60, academicYear: "2025-26",
+      quotas: { KCET: { total: 30, filled: 12 }, COMEDK: { total: 15, filled: 4 }, Management: { total: 15, filled: 3 } } },
+  ]
+ export const applicants = [
+    { id: 1, name: "Aarav Sharma", email: "aarav@email.com", phone: "9876543210", category: "GM", entryType: "Regular", quota: "KCET", programId: 1, allotmentNo: "KCT2025001", marks: 185, docStatus: "Verified", feeStatus: "Paid", status: "Confirmed", admissionNo: "VIT/2025/UG/CSE/KCET/0001" },
+    { id: 2, name: "Priya Nair", email: "priya@email.com", phone: "9876543211", category: "SC", entryType: "Regular", quota: "COMEDK", programId: 1, allotmentNo: "CMD2025045", marks: 171, docStatus: "Submitted", feeStatus: "Pending", status: "Pending", admissionNo: null },
+    { id: 3, name: "Rohan Patel", email: "rohan@email.com", phone: "9876543212", category: "OBC", entryType: "Regular", quota: "Management", programId: 2, allotmentNo: null, marks: 162, docStatus: "Pending", feeStatus: "Pending", status: "Pending", admissionNo: null },
+    { id: 4, name: "Sneha Reddy", email: "sneha@email.com", phone: "9876543213", category: "GM", entryType: "Lateral", quota: "KCET", programId: 3, allotmentNo: "KCT2025099", marks: 178, docStatus: "Verified", feeStatus: "Paid", status: "Confirmed", admissionNo: "VIT/2025/UG/ME/KCET/0001" },
+    { id: 5, name: "Kiran Kumar", email: "kiran@email.com", phone: "9876543214", category: "ST", entryType: "Regular", quota: "KCET", programId: 2, allotmentNo: "KCT2025060", marks: 159, docStatus: "Pending", feeStatus: "Pending", status: "Pending", admissionNo: null },
+  ]
