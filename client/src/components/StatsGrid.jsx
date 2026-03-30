@@ -16,11 +16,11 @@ export default function StatsGrid() {
 ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
       {stats.map((s) => (
         <div
           key={s.label}
-          className="bg-white border border-gray-100 rounded-xl p-4 relative overflow-hidden"
+          className="bg-white border border-gray-300 rounded-xl p-4 relative overflow-hidden"
         >
           {/* Left accent bar */}
           <div

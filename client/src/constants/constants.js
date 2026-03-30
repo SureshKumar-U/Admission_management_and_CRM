@@ -9,3 +9,12 @@ export  const navItems = [
         { id: "programs", label: "Programs & Quotas", path:"/programs", icon: "⊟", roles: ["Admin"] },
         { id: "masters", label: "Master Setup", icon: "⊕", path:"/masters", roles: ["Admin"] },
     ];
+
+export const PAGE_TITLES = {
+  "/": ["Dashboard", "Overview"],
+  "/applicants": ["Applicants", "Manage applications"],
+  "/allocation": ["Seat Allocation", "Allocate and confirm admissions"],
+  "/confirmed": ["Confirmed Admissions", "All confirmed students"],
+  "/programs": ["Programs & Quotas", "Seat matrix configuration"],
+  "/masters": ["Master Setup", "Institution, departments, programs"],
+};

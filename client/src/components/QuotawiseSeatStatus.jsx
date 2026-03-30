@@ -11,7 +11,7 @@ const QuotaWiseSeatStatus = ()=>{
                 <span className="font-semibold text-md" >{p.code}</span>
                 <span className=" text-xs" >{p.name}</span>
               </div>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
                 {Object.entries(p.quotas).map(([q, v]) => {
                   const pct = Math.round((v.filled / v.total) * 100);
                   const color = pct >= 100 ? "red-600" : pct >= 70 ? "amber-500" : "green-800";

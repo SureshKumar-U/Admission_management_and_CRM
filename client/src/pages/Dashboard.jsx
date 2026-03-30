@@ -1,3 +1,4 @@
+import PendingActions from "../components/PendingActions"
 import QuotaWiseSeatStatus from "../components/QuotawiseSeatStatus"
 import RecentApplications from "../components/RecentApplications"
 import StatsGrid from "../components/StatsGrid"
@@ -11,6 +12,7 @@ const Dashboard = () => {
         <QuotaWiseSeatStatus />
         <RecentApplications />
       </div>
+      <PendingActions/>
     </>
 
   )
