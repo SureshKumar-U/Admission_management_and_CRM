@@ -1,5 +1,8 @@
 const router = require('express').Router();
+const dashboarController = require('../controllers/dashboard.controllers');
+const { protect }  = require('../middlewares/auth.middleware');
 
-// routes.get("/",)
+router.use(protect);
+router.get('/stats', dashboarController.getStats);
 
 module.exports = router;
