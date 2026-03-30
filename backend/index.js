@@ -1,5 +1,10 @@
 const express = require("express")
-
-
+const cors = require("cors")
+const {PORT} = require("./config/env")
+const Routes = require("./routes")
+const dbConnect = require("./config/dbConfig")
+dbConnect()
 const app = express()
-app.listen(8080,()=>console.log("app is running on 8080 port"))
+app.use(cors({origin:"*", credentials:true}))
+app.use("/api/v1", Routes)
+app.listen(PORT,()=>console.log(`app is running on ${PORT}  port`))
