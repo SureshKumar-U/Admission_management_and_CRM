@@ -11,4 +11,4 @@ const ProgramSchema = new mongoose.Schema({
   totalIntake:  { type: Number, required: true, min: 1 },
 }, { timestamps: true });
 
-module.exports = mongoose.model('Program', ProgramSchema);
+module.exports = mongoose.models.Program || mongoose.model('Program', ProgramSchema);

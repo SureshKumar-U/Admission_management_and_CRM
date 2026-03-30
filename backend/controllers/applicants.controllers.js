@@ -29,6 +29,7 @@ const applicantsControllers = {
         } catch (err) { next(err); }
     },
     updateApplicant: async (req, res, next) => {
+        console.log(req.body)
         try {
             // Prevent overwriting confirmed status externally
             delete req.body.status;

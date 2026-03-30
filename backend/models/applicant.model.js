@@ -28,4 +28,4 @@ const ApplicantSchema = new mongoose.Schema({
   createdBy:    { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });
 
-module.exports = mongoose.model('Applicant', ApplicantSchema);
+module.exports = mongoose.models.Applicant || mongoose.model('Applicant', ApplicantSchema);

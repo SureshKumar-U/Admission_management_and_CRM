@@ -1,8 +1,7 @@
-const SeatMatrix = require('../models/SeatMatrix.model');
+const SeatMatrix = require('../models/seatmatrix.model');
 const Applicant = require('../models/applicant.model');
 const Admission = require('../models/admission.model');
 const ApiResponse = require('../utils/apiResponse');
-
 const dashboarController = {
 
     getStats: async (req, res, next) => {

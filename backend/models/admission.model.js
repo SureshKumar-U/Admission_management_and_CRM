@@ -19,4 +19,4 @@ AdmissionSchema.pre(['updateOne', 'findOneAndUpdate', 'updateMany'], function() 
   throw new Error('Admission records are immutable');
 });
 
-module.exports = mongoose.model('Admission', AdmissionSchema);
+module.exports =  mongoose.models.Admission || mongoose.model('Admission', AdmissionSchema);

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // One document per Program+AcademicYear
-// Each quota gets its own atomic counter
+// Each quota gets its own atomic counter 
 const QuotaSchema = new mongoose.Schema({
   name:      { type: String, enum: ['KCET', 'COMEDK', 'Management', 'NRI', 'SNQ'], required: true },
   total:     { type: Number, required: true, min: 0 },
@@ -29,6 +29,7 @@ SeatMatrixSchema.methods.isTotalValid = async function() {
   const prog = await Program.findById(this.program);
   const sum = this.quotas.reduce((s, q) => s + q.total, 0);
   return sum === prog.totalIntake;
-};
+}; 
 
-module.exports = mongoose.model('SeatMatrix', SeatMatrixSchema);
+const seatMatrixModel = mongoose.models.SeatMatrix  || mongoose.model('SeatMatrix', SeatMatrixSchema);
+module.exports =  seatMatrixModel
