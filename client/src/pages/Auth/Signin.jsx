@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
+import { API_BASE_URL } from "../../constants/constants";
+
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
@@ -38,7 +40,6 @@ const SignInPage = () => {
         email,
         password
       });
-      localStorage.setItem("userInfo", JSON.stringify(res.data));
       setLoading(false);
       navigate("/");
     } catch (err) {

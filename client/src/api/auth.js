@@ -1,0 +1,22 @@
+import { API_BASE_URL } from "../constants/constants";
+
+export const login = async (email, password) => {
+  try {
+    const res = await axios.post(`${API_BASE_URL}/auth/login`, {
+      email,
+      password
+    });
+    localStorage.setItem("userInfo", JSON.stringify(res.data));
+    return res.data;
+  } catch (err) {
+    throw err.response?.data?.message || "Login failed. Try again.";
+  } 
+}
+
+export const logout = () => {
+  localStorage.removeItem("userInfo");
+}   
+
+export const getToken = () => {
+  return JSON.parse(localStorage.getItem("userInfo"))?.data?.token || null;
+}   
