@@ -11,6 +11,6 @@ router.use(allowRoles('Admin', 'Admission Officer'));
 router.get('/', applicantsCtrl.getAllApplicants )
 router.post("/", applicantsCtrl.createApplicant)
 router.get('/recent', applicantsCtrl.recentApplicants) 
-// router.put('/:id',applicantsCtrl.updateApplicant )
+router.put('/:id',applicantsCtrl.updateApplicant )
 
 module.exports = router;

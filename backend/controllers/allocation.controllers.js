@@ -33,11 +33,11 @@ const allocationControllers = {
                     quotas: {
                         $elemMatch: {
                             name: applicant.quota,
-                            $expr: { $lt: ['$filled', '$total'] },  // filled < total
-                        },
-                    },
+                            filled: { $lt: applicant.totalSeats } // ❗ only works if total is known externally
+                        }
+                    }
                 },
-                { $inc: { 'quotas.$.filled': 1 } },
+                { $inc: { "quotas.$.filled": 1 } },
                 { new: true, session }
             );
 
@@ -140,6 +140,6 @@ const allocationControllers = {
 
 
 
-module.exports= allocationControllers
+module.exports = allocationControllers
 
 
