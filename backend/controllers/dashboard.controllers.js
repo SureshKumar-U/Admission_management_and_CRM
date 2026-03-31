@@ -17,10 +17,9 @@ const dashboarController = {
             const totalIntake = matrices.reduce((s, m) => s + m.program.totalIntake, 0);
             const totalFilled = matrices.reduce((s, m) => s + m.quotas.reduce((q, v) => q + v.filled, 0), 0);
 
-            const pendingDocs = await Applicant.countDocuments({ academicYear, docStatus: { $ne: 'Verified' } });
-            const feePending = await Applicant.countDocuments({ academicYear, feeStatus: 'Pending' });
-
-            // Quota-wise breakdown
+            const pendingDocs = await Applicant.find({ academicYear, docStatus: { $ne: 'Verified' } });
+            const feePending = await Applicant.find({ academicYear, feeStatus: 'Pending' });
+       
             const quotaBreakdown = matrices.map(m => ({
                 program: m.program.name,
                 code: m.program.code,
@@ -32,6 +31,7 @@ const dashboarController = {
                     pct: Math.round((q.filled / q.total) * 100),
                 })),
             }));
+
 
             res.json(new ApiResponse(200, {
                 totalIntake, totalFilled, applicants, confirmed, pendingDocs, feePending, quotaBreakdown,

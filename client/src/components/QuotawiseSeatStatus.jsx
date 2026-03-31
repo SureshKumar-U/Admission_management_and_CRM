@@ -1,18 +1,19 @@
-import { programs } from "../data/admissionData";
 
-const QuotaWiseSeatStatus = ()=>{
+const QuotaWiseSeatStatus = ({stats})=>{
+
+  const programs = stats?.quotaBreakdown;
     return (
         <>
-           <div className=" border border-gray-300 rounded-lg p-5 mb-5">
-          <div className="text-md font-semibold flex mb-4.5  items-center gap-2 ">Quota-wise Seat Status</div>
+           <div className=" border border-gray-300 rounded-lg p-5 mb-3">
+          <div className="text-md font-semibold flex mb-3  items-center gap-2 ">Quota-wise Seat Status</div>
           {programs?.map(p => (
-            <div key={p.id} className="mb-4">
-              <div className="flex items-center mb-4 gap-2">
+            <div key={p.id} className="mb-3">
+              <div className="flex items-center mb-3 gap-2">
                 <span className="font-semibold text-md" >{p.code}</span>
-                <span className=" text-xs" >{p.name}</span>
+                <span className=" text-xs" >{p.program}</span>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-                {Object.entries(p.quotas).map(([q, v]) => {
+                {Object.entries(p.quotas)?.slice(0,3).map(([q, v]) => {
                   const pct = Math.round((v.filled / v.total) * 100);
                   const color = pct >= 100 ? "red-600" : pct >= 70 ? "amber-500" : "green-800";
                   return (

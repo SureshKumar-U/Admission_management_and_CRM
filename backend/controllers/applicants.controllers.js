@@ -44,10 +44,19 @@ const applicantsControllers = {
             const applicant = await Applicant.create({ ...req.body, createdBy: req.user._id });
             res.status(201).json(new ApiResponse(201, applicant, 'Applicant created'));
         } catch (err) { next(err); }
+    },
+    recentApplicants: async (req, res, next) => {
+        try {
+            const applicants = await Applicant.find()
+                .populate('program', 'name code courseType')
+                .sort({ createdAt: -1 })
+                .limit(5);
+            res.json(new ApiResponse(200, applicants));
+        } catch (err) { next(err); }
+
     }
 
 }
-
 module.exports = applicantsControllers
 
 

@@ -25,12 +25,12 @@ function App() {
               <Route path="/signin" element={<SiginPage />} />
               <Route path="signup" element={<SigUpPage />} />
               <Route path='/applicants' element={<Applicants />} />
-                   <Route path='/allocation' element={<AllocationPage />} />
+              <Route path='/allocation' element={<AllocationPage />} />
             </Routes>
           </main>
         </div>
       </div>
-   {/* <DupApp/> */}
+      {/* <DupApp/> */}
 
     </>
 

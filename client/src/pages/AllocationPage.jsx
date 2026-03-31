@@ -8,7 +8,6 @@ function AllocationPage() {
 
   const token = JSON.parse(localStorage.getItem("userInfo"))?.data?.token;
 
-  // ================= FETCH DATA =================
   useEffect(() => {
     fetchData();
   }, []);
@@ -38,11 +37,8 @@ function AllocationPage() {
     }
   };
 
-  // ================= DERIVED =================
   const appl = applicants?.find(a => a._id === selectedId);
   const prog = programs?.find(p => p._id === appl?.program._id);
-
-  // ================= ACTIONS =================
 
   const updateApplicant = async (data) => {
     await fetch(`http://localhost:8000/api/v1/applicants/${appl._id}`, {

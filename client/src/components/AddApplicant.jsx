@@ -2,7 +2,6 @@ import { useState } from "react";
 import axios from "axios";
 
 function AddApplicantModal({ programs, institutionId, academicYear, onClose, onSubmit }) {
-
     const [form, setForm] = useState({
         name: "",
         email: "",

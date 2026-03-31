@@ -1,19 +1,15 @@
 
-export default function StatsGrid() {
-  
-  
+export default function StatsGrid({ stats: statsData }) {
+      
 
-  const pendingDocs = 6
-  const feePending = 6
-  const totalFilled = 718
-  const totalIntake = 3142
 
   const stats = [
-  { label: "Total Intake", value: "3,142", sub: "Across all programs", accent: "#14b8a6" },
-  { label: "Seats Filled", value: "718", badge: "Active", badgeType: "info",   sub: `${Math.round((totalFilled / totalIntake) * 100)}% of total intake`, accent: "#378add" },
-  { label: "Confirmed Admissions", value: "524", badge: "↑ 9%", badgeType: "success", sub: "vs last year", accent: "#639922" },
-  { label: "Pending Actions", value: pendingDocs + feePending, badge: "74%", badgeType: "warning", sub:pendingDocs + " docs And " +feePending  + " fees", accent: "#ef9f27" },
+  { label: "Total Intake", value: statsData?.totalIntake, sub: "Across all programs", accent: "#14b8a6" },
+  { label: "Seats Filled", value: statsData?.totalFilled, badge: "Active", badgeType: "info",   sub: `${Math.round((statsData?.totalFilled / statsData?.totalIntake) * 100)}% of total intake`, accent: "#378add" },
+  { label: "Confirmed Admissions", value: statsData?.confirmed, badge: "↑ 9%", badgeType: "success", sub: "vs last year", accent: "#639922" },
+  { label: "Pending Actions", value: statsData?.pendingDocs?.length + statsData?.feePending?.length, badge: "74%", badgeType: "warning", sub:statsData?.pendingDocs?.length + " docs And " +statsData?.feePending?.length  + " fees", accent: "#ef9f27" },
 ];
+
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
