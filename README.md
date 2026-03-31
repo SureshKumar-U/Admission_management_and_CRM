@@ -22,10 +22,10 @@ This repository has 2 major parts:
 3. Configure environment variables:
    - Create `.env` in `backend/` (copy from `.env.example` if exists, or create new file). Example values:
      ```ini
-     PORT=5000
-     DB_URL=mongodb://localhost:27017/your-db-name
+     PORT=8080
+     MONGO_URI=mongodb://localhost:27017/your-db-name
      JWT_SECRET=your_jwt_secret_here
-     JWT_EXPIRES_IN=7d
+     JWT_EXPIRES=7d
      NODE_ENV=development
      ```
    - Keep it simple: just the keys your app expects. You can open `config/env.js` (if present) to confirm key names and defaults.
