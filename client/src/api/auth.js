@@ -17,6 +17,7 @@ export const logout = () => {
   localStorage.removeItem("userInfo");
 }   
 
+
 export const getToken = () => {
   return JSON.parse(localStorage.getItem("userInfo"))?.data?.token || null;
 }   
