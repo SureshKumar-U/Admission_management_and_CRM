@@ -20,9 +20,15 @@ This repository has 2 major parts:
    npm install
    ```
 3. Configure environment variables:
-   - Copy `.env.example` (if provided) to `.env`
-   - Set values for DB URL, JWT secret, port, etc.
-   - If this repo uses `config/env.js`, ensure it has correct values for dev.
+   - Create `.env` in `backend/` (copy from `.env.example` if exists, or create new file). Example values:
+     ```ini
+     PORT=5000
+     DB_URL=mongodb://localhost:27017/your-db-name
+     JWT_SECRET=your_jwt_secret_here
+     JWT_EXPIRES_IN=7d
+     NODE_ENV=development
+     ```
+   - Keep it simple: just the keys your app expects. You can open `config/env.js` (if present) to confirm key names and defaults.
 
 4. Start backend server:
    ```bash
