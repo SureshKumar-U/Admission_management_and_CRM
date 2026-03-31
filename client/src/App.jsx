@@ -1,6 +1,7 @@
 import './index.css'
 import { Routes, Route, useLocation } from "react-router-dom";
 import Dashboard from './pages/Dashboard';
+import Programms from './pages/Programs';
 import TopNav from './components/TopNav';
 import Sidebar from './components/Sidebar';
 import SiginPage from './pages/Auth/Signin';
@@ -22,6 +23,7 @@ function App() {
           <main className="flex-1 overflow-y-auto p-5 flex flex-col gap-4 ">
             <Routes>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/programs" element={<Programms />} />
               <Route path="/signin" element={<SiginPage />} />
               <Route path="signup" element={<SigUpPage />} />
               <Route path='/applicants' element={<Applicants />} />
