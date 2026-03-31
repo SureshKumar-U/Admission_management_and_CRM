@@ -34,3 +34,5 @@ function DepartmentForm({ institutions }) {
     </>
   );
 }
+
+export default DepartmentForm
