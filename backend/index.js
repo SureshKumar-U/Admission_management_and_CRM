@@ -10,5 +10,8 @@ app.use(express.json())
 app.use(cors({origin:"*", credentials:true}))
 
 app.use("/api/v1", Routes)
+app.get("/api/v1/health", (req, res) => {
+    res.status(200).json({message: "API is Running Fine"})
+})
 app.use(errorHandler)
 app.listen(PORT,()=>console.log(`app is running on ${PORT}  port`))

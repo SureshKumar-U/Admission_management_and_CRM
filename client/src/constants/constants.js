@@ -18,3 +18,5 @@ export const PAGE_TITLES = {
   "/programs": ["Programs & Quotas", "Seat matrix configuration"],
   "/masters": ["Master Setup", "Institution, departments, programs"],
 };
+
+export const API_BASE_URL = 'http://localhost:8000/api/v1';

@@ -36,7 +36,7 @@ This repository has 2 major parts:
    ```
 
 5. Verify API is running:
-   - Default location: `http://localhost:5000` (or whichever port you set)
+   - Default location: `http://localhost:8080` (or whichever port you set)
    - Use Postman or browser to hit `GET /` or `GET /api/health`.
 
 ## 2) Frontend setup (React app)
