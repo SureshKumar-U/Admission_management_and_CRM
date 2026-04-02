@@ -2,15 +2,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
-import { API_BASE_URL } from "../../constants/constants";
-
+import { login } from "../../api/auth";
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState(""); 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
 
 
@@ -36,15 +34,12 @@ const SignInPage = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:8000/api/v1/auth/login", {
-        email,
-        password
-      });
-      setLoading(false);
+      const res = await login(email, password);
       navigate("/");
     } catch (err) {
-      setLoading(false);
       setError(err.response?.data?.message || "Login failed. Try again.");
+    } finally{
+        setLoading(false);
     }
   };
 

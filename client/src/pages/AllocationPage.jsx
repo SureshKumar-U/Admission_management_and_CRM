@@ -1,5 +1,6 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios"
+import { confirmAdmission, getApplicants, getPrograms, updateApplicant } from "../api/allocations";
 function AllocationPage() {
   const [applicants, setApplicants] = useState([]);
   const [programs, setPrograms] = useState([]);
@@ -19,16 +20,12 @@ function AllocationPage() {
     try {
       setLoading(true);
       const [appRes, progRes] = await Promise.all([
-        axios.get("http://localhost:8000/api/v1/applicants", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.get("http://localhost:8000/api/v1/programs", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
+        getApplicants(token),
+        getPrograms(token)
       ]);
-      setApplicants(appRes?.data?.data?.applicants || []);
-      setPrograms(progRes?.data?.data || []);
-      setSelectedId(appRes?.data?.data?.applicants?.[0]?._id);
+      setApplicants(appRes?.data?.applicants || []);
+      setPrograms(progRes?.data || []);
+      setSelectedId(appRes?.data?.applicants?.[0]?._id);
 
     } catch (err) {
       console.error(err);
@@ -43,50 +40,25 @@ function AllocationPage() {
     const prog = programs?.find(p => p._id === appl?.program._id);
     if (appl) setSelectedApplicant(appl);
     if (prog) setSelectedProgram(prog);
-
-
   }, [selectedId])
 
-
-
-
-  const updateApplicant = async (data) => {
-    console.log("Updating applicant with data:", token);
-    await axios.put(`http://localhost:8000/api/v1/applicants/${selectedApplicant._id}`, data, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  const handleDocUpdate = (status) => {
+    updateApplicant(token, { docStatus: status }, selectedApplicant._id);
     fetchData();
   };
 
-  const handleDocUpdate = (status) => {
-    updateApplicant({ docStatus: status });
-  };
-
   const handleFeeUpdate = (status) => {
-    updateApplicant({ feeStatus: status });
+    updateApplicant(token, { feeStatus: status }, selectedApplicant._id);
+    fetchData();
   };
 
   const handleConfirm = async () => {
     try {
-      const res = await axios.post(
-        `http://localhost:8000/api/v1/allocations/confirm/${selectedApplicant._id}`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
 
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message);
-
-      alert("Admission Confirmed: " + data.data.admissionNo);
+      await confirmAdmission(token, selectedApplicant._id);
       fetchData();
     } catch (err) {
-      alert(err.message);
+      console.error(err.message);
     }
   };
 

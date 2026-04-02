@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { register } from "../../api/auth";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-    const [name, setName] = useState("");
-
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState("");
+
   useEffect(() => {
     const userInfo = localStorage.getItem("userInfo");
     if (userInfo) {
@@ -44,19 +44,12 @@ const SignUpPage = () => {
 
     setLoading(true);
     try {
-      const { data } = await axios.post("http://localhost:8000/api/v1/auth/register", {
-        email,
-        password,
-        role,
-        name
-      });
-
-      // Save user info in localStorage
-      localStorage.setItem("userInfo", JSON.stringify(data));
-      navigate("/", { replace: true });
+      await register(name, email, password, role);
+      navigate("/");
     } catch (err) {
+
       setError(
-        err.response?.data?.message || err.message || "Signup failed"
+        err|| "Signup failed"
       );
     } finally {
       setLoading(false);
