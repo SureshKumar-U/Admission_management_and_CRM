@@ -30,8 +30,12 @@ const authController = {
             const exists = await User.findOne({ email });
             if (exists) throw new ApiError(409, 'Email already registered');
             const user = await User.create({ name, email, password, role });
+            const token = signToken(user._id);
             res.status(201).json(new ApiResponse(201, {
-                id: user._id, name: user.name, email: user.email, role: user.role
+                user:{
+                    id: user._id, name: user.name, email: user.email, role: user.role
+                },
+                token
             }, 'User created'));
         } catch (err) { next(err); }
     },
