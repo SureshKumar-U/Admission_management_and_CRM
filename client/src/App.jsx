@@ -9,6 +9,7 @@ import SigUpPage from './pages/Auth/Signup';
 import Applicants from './pages/Applicants';
 import DupApp from './duplicateApp';
 import AllocationPage from './pages/AllocationPage';
+import ConfirmedAdmissions from './pages/ConfirmedAdmissions';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
               <Route path="signup" element={<SigUpPage />} />
               <Route path='/applicants' element={<Applicants />} />
               <Route path='/allocation' element={<AllocationPage />} />
+              <Route path='/confirmed' element={<ConfirmedAdmissions />} />
             </Routes>
           </main>
         </div>

@@ -49,3 +49,4 @@ export const confirmAdmission = async (token, selectedApplicantId) => {
         throw err.response?.data?.message || "Failed to confirm admission";
     }
 };
+
