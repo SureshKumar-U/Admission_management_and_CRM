@@ -25,23 +25,29 @@ const allocationControllers = {
             if (applicant.feeStatus !== 'Paid') throw new ApiError(400, 'Fee must be paid before confirming admission');
             if (applicant.docStatus !== 'Verified') throw new ApiError(400, 'Documents must be verified before confirming admission');
 
-            // Atomically decrement the seat counter — only succeeds if remaining > 0
-            const matrix = await SeatMatrix.findOneAndUpdate(
+            // Find the seat matrix
+            const matrix = await SeatMatrix.findOne({
+                program: applicant.program._id,
+                academicYear: applicant.academicYear
+            }).session(session);
+            if (!matrix) throw new ApiError(404, 'Seat matrix not found for this program and year');
+
+            // Find the specific quota
+            const quota = matrix.quotas.find(q => q.name === applicant.quota);
+            if (!quota) throw new ApiError(404, `Quota ${applicant.quota} not found in seat matrix`);
+
+            // Check if seats are available
+            if (quota.filled >= quota.total) throw new ApiError(409, `No seats available in ${applicant.quota} quota`);
+
+            // Atomically increment the filled count
+            await SeatMatrix.findOneAndUpdate(
                 {
-                    program: applicant.program._id,
-                    academicYear: applicant.academicYear,
-                    quotas: {
-                        $elemMatch: {
-                            name: applicant.quota,
-                            filled: { $lt: applicant.totalSeats } // ❗ only works if total is known externally
-                        }
-                    }
+                    _id: matrix._id,
+                    'quotas.name': applicant.quota
                 },
                 { $inc: { "quotas.$.filled": 1 } },
-                { new: true, session }
+                { session }
             );
-
-            if (!matrix) throw new ApiError(409, `No seats available in ${applicant.quota} quota`);
 
             // Generate immutable admission number
             const institution = await Institution.findById(applicant.institution);
