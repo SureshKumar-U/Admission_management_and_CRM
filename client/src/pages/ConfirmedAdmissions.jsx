@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import DocBadge from "../components/DocBadge";
 import FeeBadge from "../components/FeedBadge";
 import StatusBadge from "../components/StatusBadge";
-import { getApplicants } from "../api/allocations";
+import { getAdmisionList, getApplicants } from "../api/allocations";
 
 const ConfirmedAdmissions = () => {
-    const [applicants, setApplicants] = useState([]);
+    const [admissions, setAdmissions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [search, setSearch] = useState("");
@@ -16,8 +16,8 @@ const ConfirmedAdmissions = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await getApplicants(token);
-                setApplicants(res.data?.applicants || []);
+                const res = await getAdmisionList(token);
+                setAdmissions(res.data?.admissions || []);
             } catch (err) {
                 console.error(err);
                 setError("Failed to fetch confirmed admissions");
@@ -27,12 +27,11 @@ const ConfirmedAdmissions = () => {
         };
         fetchData();
     }, [token]);
+    console.log("Admissions fetched:", admissions);
 
-    const confirmedApplicants = applicants.filter(a => a.status == 'Confirmed');
-
-    const filteredApplicants = confirmedApplicants.filter((a) =>
-        a.name.toLowerCase().includes(search.toLowerCase()) ||
-        a.email.toLowerCase().includes(search.toLowerCase())
+    const filteredAdmissions = admissions.filter((a) =>
+        a?.applicant.name.toLowerCase().includes(search.toLowerCase()) ||
+        a?.applicant.email.toLowerCase().includes(search.toLowerCase())
     );
 
     if (loading) return (
@@ -55,7 +54,7 @@ const ConfirmedAdmissions = () => {
                         <div>
                             <h1 className="text-2xl font-bold">Confirmed Admissions</h1>
                             <p className="text-green-100 mt-1">
-                                {filteredApplicants.length} confirmed admissions
+                                {filteredAdmissions.length} confirmed admissions
                             </p>
                         </div>
                     </div>
@@ -76,32 +75,34 @@ const ConfirmedAdmissions = () => {
                         <table className="w-full">
                             <thead className="bg-gray-100">
                                 <tr>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase">Admission Number</th>
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Name</th>
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Email</th>
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Program</th>
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Quota</th>
-                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Docs</th>
-                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Fee</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Academic Year</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Institution</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Confirmed By</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {filteredApplicants.map((applicant) => (
+                                {filteredAdmissions?.map(({ applicant, admissionNo, academicYear, institution, quota, confirmedBy,program }) => (
                                     <tr key={applicant._id} className="hover:bg-gray-50 transition-colors">
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{applicant.name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">{admissionNo}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{applicant.name}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{applicant.email}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{applicant.program?.name || 'N/A'}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{applicant.quota}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap"><StatusBadge status={applicant.status} /></td>
-                                        <td className="px-6 py-4 whitespace-nowrap"><DocBadge status={applicant.docStatus} /></td>
-                                        <td className="px-6 py-4 whitespace-nowrap"><FeeBadge status={applicant.feeStatus} /></td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{program?.name || 'N/A'}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{quota}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{academicYear}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{institution?.name || 'N/A'}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{confirmedBy?.name}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
 
-                    {filteredApplicants.length === 0 && (
+                    {filteredAdmissions?.length === 0 && (
                         <div className="text-center py-8 text-gray-500">
                             No confirmed admissions found.
                         </div>

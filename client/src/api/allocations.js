@@ -50,3 +50,13 @@ export const confirmAdmission = async (token, selectedApplicantId) => {
     }
 };
 
+export const getAdmisionList = async (token) => {
+    try {
+        const res = await axios.get(`${API_BASE_URL}/allocations/admissions`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+        return res.data     
+    } catch (err) {
+        throw err.response?.data?.message || "Failed to fetch admission list"
+    }
+}
