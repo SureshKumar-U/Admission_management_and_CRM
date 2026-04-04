@@ -10,6 +10,7 @@ import Applicants from './pages/Applicants';
 import DupApp from './duplicateApp';
 import AllocationPage from './pages/AllocationPage';
 import ConfirmedAdmissions from './pages/ConfirmedAdmissions';
+import MasterPage from './pages/MasterPage';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
               <Route path='/applicants' element={<Applicants />} />
               <Route path='/allocation' element={<AllocationPage />} />
               <Route path='/confirmed' element={<ConfirmedAdmissions />} />
+              <Route path='/masters' element={<MasterPage />} />
             </Routes>
           </main>
         </div>
