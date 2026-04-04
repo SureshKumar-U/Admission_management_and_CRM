@@ -10,77 +10,76 @@ const { generateAdmissionNumber } = require('../utils/admissionNumber');
 
 const allocationControllers = {
     confirmAdmission: async (req, res, next) => {
-        // Use a MongoDB session for atomic seat decrement + admission creation
         const session = await mongoose.startSession();
-        session.startTransaction();
+        let admission;
 
         try {
-            const { applicantId } = req.params;
+            await session.withTransaction(async () => {
+                const { applicantId } = req.params;
+                const applicant = await Applicant.findById(applicantId)
+                    .populate('program')
+                    .session(session);
+                if (!applicant) throw new ApiError(404, 'Applicant not found');
+                if (applicant.status === 'Confirmed') throw new ApiError(400, 'Admission already confirmed');
+                if (applicant.feeStatus !== 'Paid') throw new ApiError(400, 'Fee must be paid before confirming admission');
+                if (applicant.docStatus !== 'Verified') throw new ApiError(400, 'Documents must be verified before confirming admission');
 
-            const applicant = await Applicant.findById(applicantId)
-                .populate('program')
-                .session(session);
-            if (!applicant) throw new ApiError(404, 'Applicant not found');
-            if (applicant.status === 'Confirmed') throw new ApiError(400, 'Admission already confirmed');
-            if (applicant.feeStatus !== 'Paid') throw new ApiError(400, 'Fee must be paid before confirming admission');
-            if (applicant.docStatus !== 'Verified') throw new ApiError(400, 'Documents must be verified before confirming admission');
+                // Find the seat matrix
+                const matrix = await SeatMatrix.findOne({
+                    program: applicant.program._id,
+                    academicYear: applicant.academicYear
+                }).session(session);
+                if (!matrix) throw new ApiError(404, 'Seat matrix not found for this program and year');
 
-            // Find the seat matrix
-            const matrix = await SeatMatrix.findOne({
-                program: applicant.program._id,
-                academicYear: applicant.academicYear
-            }).session(session);
-            if (!matrix) throw new ApiError(404, 'Seat matrix not found for this program and year');
+                // Find the specific quota
+                const quota = matrix.quotas.find(q => q.name === applicant.quota);
+                if (!quota) throw new ApiError(404, `Quota ${applicant.quota} not found in seat matrix`);
 
-            // Find the specific quota
-            const quota = matrix.quotas.find(q => q.name === applicant.quota);
-            if (!quota) throw new ApiError(404, `Quota ${applicant.quota} not found in seat matrix`);
+                // Check if seats are available
+                if (quota.filled >= quota.total) throw new ApiError(409, `No seats available in ${applicant.quota} quota`);
 
-            // Check if seats are available
-            if (quota.filled >= quota.total) throw new ApiError(409, `No seats available in ${applicant.quota} quota`);
+                // Atomically increment the filled count
+                await SeatMatrix.updateOne(
+                    {
+                        _id: matrix._id,
+                        'quotas.name': applicant.quota
+                    },
+                    { $inc: { 'quotas.$.filled': 1 } },
+                    { session }
+                ).session(session);
 
-            // Atomically increment the filled count
-            await SeatMatrix.findOneAndUpdate(
-                {
-                    _id: matrix._id,
-                    'quotas.name': applicant.quota
-                },
-                { $inc: { "quotas.$.filled": 1 } },
-                { session }
-            );
+                // Generate immutable admission number
+                const institution = await Institution.findById(applicant.institution).session(session);
+                const admissionNo = await generateAdmissionNumber(
+                    applicant.program,
+                    institution.code,
+                    applicant.quota,
+                    applicant.academicYear,
+                    session
+                );
 
-            // Generate immutable admission number
-            const institution = await Institution.findById(applicant.institution);
-            const admissionNo = await generateAdmissionNumber(
-                applicant.program,
-                institution.code,
-                applicant.quota,
-                applicant.academicYear
-            );
+                // Create immutable Admission record
+                [admission] = await Admission.create([{
+                    admissionNo,
+                    applicant: applicant._id,
+                    program: applicant.program._id,
+                    institution: applicant.institution,
+                    quota: applicant.quota,
+                    academicYear: applicant.academicYear,
+                    confirmedBy: req.user._id,
+                }], { session });
 
-            // Create immutable Admission record
-            const [admission] = await Admission.create([{
-                admissionNo,
-                applicant: applicant._id,
-                program: applicant.program._id,
-                institution: applicant.institution,
-                quota: applicant.quota,
-                academicYear: applicant.academicYear,
-                confirmedBy: req.user._id,
-            }], { session });
-
-            // Update applicant status
-            await Applicant.findByIdAndUpdate(
-                applicantId,
-                { status: 'Confirmed' },
-                { session }
-            );
-
-            await session.commitTransaction();
+                // Update applicant status
+                await Applicant.findByIdAndUpdate(
+                    applicantId,
+                    { status: 'Confirmed' },
+                    { session }
+                );
+            });
 
             res.status(201).json(new ApiResponse(201, { admissionNo: admission.admissionNo }, 'Admission confirmed successfully'));
         } catch (err) {
-            await session.abortTransaction();
+            console.error('Error confirming admission:', err);
             next(err);
         } finally {
             session.endSession();

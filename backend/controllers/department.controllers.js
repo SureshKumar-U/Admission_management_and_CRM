@@ -30,7 +30,7 @@ const departmentControllers = {
     update: async (req, res, next) => {
         try {
             const dept = await Department.findByIdAndUpdate(
-                req.params.id, req.body, { new: true, runValidators: true }
+                req.params.id, req.body, { returnDocument: 'after', runValidators: true }
             );
             if (!dept) throw new ApiError(404, 'Department not found');
             res.json(new ApiResponse(200, dept));

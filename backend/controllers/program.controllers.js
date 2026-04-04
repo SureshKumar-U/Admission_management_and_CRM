@@ -40,7 +40,7 @@ const ProgramControllers = {
     update: async (req, res, next) => {
         try {
             const program = await Program.findByIdAndUpdate(
-                req.params.id, req.body, { new: true, runValidators: true }
+                req.params.id, req.body, { returnDocument: 'after', runValidators: true }
             );
             if (!program) throw new ApiError(404, 'Program not found');
             res.json(new ApiResponse(200, program));
@@ -104,7 +104,7 @@ const ProgramControllers = {
             const matrix = await SeatMatrix.findOneAndUpdate(
                 { program: req.params.id },
                 { $set: { quotas } },
-                { new: true }
+                { returnDocument: 'after' }
             );
             if (!matrix) throw new ApiError(404, 'Seat matrix not found');
             res.json(new ApiResponse(200, matrix));

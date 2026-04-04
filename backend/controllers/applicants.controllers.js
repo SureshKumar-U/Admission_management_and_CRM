@@ -29,12 +29,11 @@ const applicantsControllers = {
         } catch (err) { next(err); }
     },
     updateApplicant: async (req, res, next) => {
-        console.log(req.body)
         try {
             // Prevent overwriting confirmed status externally
             delete req.body.status;
             delete req.body.admissionNo;
-            const applicant = await Applicant.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+            const applicant = await Applicant.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after', runValidators: true });
             if (!applicant) throw new ApiError(404, 'Applicant not found');
             res.json(new ApiResponse(200, applicant));
         } catch (err) { next(err); }
